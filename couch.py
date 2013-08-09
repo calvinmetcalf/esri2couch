@@ -58,15 +58,17 @@ previewPage = """
 design = dumps({
    "_id": "_design/geojson",
    "spatial": {
-       "geometry": "function(doc){\n       if(doc.geometry){ emit(doc.geometry,doc)};\n            }"
+       "geo": "function(doc){\n       if(doc.geometry){ emit(doc.geometry,doc)};\n            }"
+   },
+   "views": {
+       "geometry": {
+           "map": "function(doc) {\n  if(doc.geometry){\nemit(doc.geometry,doc);\n}\n}"
+       }
    },
    "rewrites": [
        {
-           "to": "/_spatial/_list/geojson/geometry",
-           "from": "/all",
-           "query": {
-               "bbox": "-180,-90,180,90"
-           }
+           "to": "/_list/geojson/geometry",
+           "from": "/all"
        },
        {
            "to": "/index.html",
